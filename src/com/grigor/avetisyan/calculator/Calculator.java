@@ -1,11 +1,11 @@
 package com.grigor.avetisyan.calculator;
 
-public interface Calculator {
-    String plus(String a, String b);
+public interface Calculator<T> {
+    T plus(T a, T b);
 
-    String minus(String a, String b);
+    T minus(T a, T b);
 
-    String multiply(String a, String b);
+    T multiply(T a, T b);
 
-    String division(String a, String b);
+    T division(T a, T b);
 }
