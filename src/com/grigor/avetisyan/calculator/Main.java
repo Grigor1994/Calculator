@@ -1,7 +1,5 @@
 package com.grigor.avetisyan.calculator;
 
-import com.grigor.avetisyan.calculator.util.Parser;
-
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +9,9 @@ public class Main {
 
         System.out.println("Input: ");
         String input = scanner.nextLine();
+
         String[] inputArray = input.split(" ");
+        checkArrayLength(inputArray);
 
         String firstOperand = inputArray[0];
         String secondOperand = inputArray[2];
@@ -20,43 +20,57 @@ public class Main {
         ArabicCalculator arabicCalculator = new ArabicCalculator();
         RomanCalculator romanCalculator = new RomanCalculator(arabicCalculator);
 
-        boolean checker = false;
-        if (Parser.checkType(firstOperand, secondOperand)) {
-            checker =true;
+        Object result;
+
+        boolean isNumeric = false;
+        if (isNumeric(firstOperand, secondOperand)) {
+            isNumeric = true;
         }
 
         switch (operator) {
             case "+" -> {
-                if (checker) {
-                    System.out.println("Output: \n" + arabicCalculator.plus(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand)));
+                if (isNumeric) {
+                    result = arabicCalculator.plus(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand));
                 } else {
-                    System.out.println("Output: \n" + romanCalculator.plus(firstOperand, secondOperand));
+                    result = romanCalculator.plus(firstOperand, secondOperand);
                 }
             }
             case "-" -> {
-                if (checker) {
-                    System.out.println("Output: \n" + arabicCalculator.minus(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand)));
+                if (isNumeric) {
+                    result = arabicCalculator.minus(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand));
                 } else {
-                    System.out.println("Output: \n" + romanCalculator.minus(firstOperand, secondOperand));
+                    result = romanCalculator.minus(firstOperand, secondOperand);
                 }
             }
             case "*" -> {
-                if (checker) {
-                    System.out.println("Output: \n" + arabicCalculator.multiply(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand)));
+                if (isNumeric) {
+                    result = arabicCalculator.multiply(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand))
+                    ;
                 } else {
-                    System.out.println("Output: \n" + romanCalculator.multiply(firstOperand, secondOperand));
+                    result = romanCalculator.multiply(firstOperand, secondOperand);
                 }
             }
             case "/" -> {
-                if (checker) {
-                    System.out.println("Output: \n" + arabicCalculator.division(Integer.parseInt(inputArray[0]), Integer.parseInt(inputArray[2])));
+                if (isNumeric) {
+                    result = arabicCalculator.division(Integer.parseInt(firstOperand), Integer.parseInt(secondOperand));
                 } else {
-                    System.out.println("Output: \n" + romanCalculator.division(firstOperand, secondOperand));
+                    result = romanCalculator.division(firstOperand, secondOperand);
                 }
             }
-            default -> {
-                throw new IllegalArgumentException("`" + operator + "`" + " is not mathematical operator.");
-            }
+            default -> throw new IllegalArgumentException("`" + operator + "`" + " is not mathematical operator.");
         }
+        System.out.println("Output: \n" + result);
+    }
+
+    static boolean isNumeric(String firstOperand, String secondOperand) {
+        // null or empty
+        if (firstOperand == null || firstOperand.length() == 0 && secondOperand == null || secondOperand.length() == 0) {
+            return false;
+        }
+        return firstOperand.chars().allMatch(Character::isDigit) && secondOperand.chars().allMatch(Character::isDigit);
+    }
+
+    static void checkArrayLength(String[] inputArray) {
+        if (inputArray.length > 3) throw new ArrayIndexOutOfBoundsException();
     }
 }
